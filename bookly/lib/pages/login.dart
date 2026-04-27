@@ -1,4 +1,3 @@
-import 'package:bookly/pages/create_acct_page.dart';
 import 'package:bookly/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -37,6 +36,8 @@ class _LoginPageState extends State<LoginPage> {
         //store in secure phone memory
         await mobileStorage.write(key: 'accessToken', value: data['accessToken']);
         await mobileStorage.write(key: 'refreshToken', value: data['refreshToken']);
+        Navigator.pushReplacementNamed(context, '/home');
+
       }
       //invalid login
       else if (response.statusCode == 401) {
@@ -208,12 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateAcctPage()
-                        )
-                      );
+                      Navigator.pushReplacementNamed(context, '/createAcct');
                     },
                   )
                 ],

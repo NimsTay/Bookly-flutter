@@ -1,5 +1,7 @@
 import 'package:bookly/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -9,6 +11,26 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+
+  //do this once to initiate the check of jwt and not each time this widget is called
+  @override
+  void initState() {
+    super.initState();
+    checkAuth();
+  }
+
+  Future<void> checkAuth() async {
+    final mobileStorage = FlutterSecureStorage();
+    final token = await mobileStorage.read(key: 'accessToken');
+
+    if (token == null || JwtDecoder.isExpired(token)) {
+      await mobileStorage.delete(key: 'access');
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+}
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(

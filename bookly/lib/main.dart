@@ -1,6 +1,11 @@
+import 'package:bookly/pages/create_acct_page.dart';
+import 'package:bookly/pages/homepage.dart';
 import 'package:bookly/pages/landing_page.dart';
 import 'package:bookly/pages/login.dart';
-import 'package:flutter/material.dart';
+import 'package:bookly/pages/profile_page.dart';
+import 'package:bookly/pages/search_page.dart';
+import 'package:flutter/cupertino.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,13 +15,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-	debugShowCheckedModeBanner: false,
-	home: LandingPage(),
-	routes: {
-		'/loginPage': (context) => LoginPage(),
-		'/landingPage': (context) => LandingPage()
-	},
+    return CupertinoApp(
+      debugShowCheckedModeBanner: false,
+      home: LandingPage(),
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/landing': (context) => LandingPage(),
+        '/createAcct': (context) => CreateAcctPage(),
+        '/home': (context) => Homepage(),
+        '/search': (context) => SearchPage(),
+        '/profile': (context) => ProfilePage()
+      },
     );
   }
 }
