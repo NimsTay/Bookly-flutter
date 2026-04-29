@@ -1,3 +1,4 @@
+import 'package:bookly/pages/categories_page.dart';
 import 'package:bookly/pages/homepage.dart';
 import 'package:bookly/pages/profile_page.dart';
 import 'package:bookly/pages/search_page.dart';
@@ -29,6 +30,7 @@ class BottomNav extends StatelessWidget {
       tabBar: CupertinoTabBar(
         height: 64,
         activeColor: ThemeColors.magenta,
+        
         items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home),
@@ -41,6 +43,10 @@ class BottomNav extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.profile_circled),
             label: 'Profile'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.option),
+            label: 'Categories'
           ),
         ]
       ),
@@ -58,6 +64,10 @@ class BottomNav extends StatelessWidget {
           case 2:
             return CupertinoTabView(
               builder: (context) => ProfilePage()
+            );
+          case 3:
+            return CupertinoTabView(
+              builder: (context) => CategoriesPage()
             );
           default:
             return Container();
