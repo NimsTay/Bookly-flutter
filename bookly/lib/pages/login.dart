@@ -1,9 +1,10 @@
 import 'package:bookly/theme/theme_colors.dart';
+import 'package:bookly/widgets/user_input.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,18 +14,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   Future<void> login() async {
     final loginUrl = Uri.parse('http://127.0.0.1:8000/userApp/login/');
     try {
       final response = await http.post(
         loginUrl,
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': emailController.text,
-          'password': passController.text
+          'password': passController.text,
         }),
       );
 
@@ -34,24 +32,29 @@ class _LoginPageState extends State<LoginPage> {
           loginMessage = "Success";
         });
         //store in secure phone memory
-        await mobileStorage.write(key: 'accessToken', value: data['accessToken']);
-        await mobileStorage.write(key: 'refreshToken', value: data['refreshToken']);
+        await mobileStorage.write(
+          key: 'accessToken',
+          value: data['accessToken'],
+        );
+        await mobileStorage.write(
+          key: 'refreshToken',
+          value: data['refreshToken'],
+        );
         Navigator.pushReplacementNamed(context, '/home');
-
       }
       //invalid login
       else if (response.statusCode == 401) {
         setState(() {
-          loginMessage = "Invalid credentials. Please try again or create an account.";
+          loginMessage =
+              "Invalid credentials. Please try again or create an account.";
         });
-      }
-      else if (response.statusCode == 500) {
+      } else if (response.statusCode == 500) {
         setState(() {
-          loginMessage = "There was an issue in the backend. Please try again later.";
+          loginMessage =
+              "There was an issue in the backend. Please try again later.";
         });
       }
-    }
-    catch(e) {
+    } catch (e) {
       setState(() {
         loginMessage = "Something went wrong";
       });
@@ -64,15 +67,41 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passController = TextEditingController();
   String loginMessage = "";
   final mobileStorage = FlutterSecureStorage();
+  bool showFirstView = true;
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    emailFocusNode.addListener(() {
+      setState(() {}); // rebuild when focus changes
+    });
+    passFocusNode.addListener(() {
+      setState(() {}); // rebuild when focus changes
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CupertinoApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home: CupertinoPageScaffold(
         backgroundColor: ThemeColors.yellow,
-        body: Column(
+        child: Column(
           children: [
+            Expanded(
+              child: CupertinoSwitch(
+                //the initial value
+                value: showFirstView,
+                //when changed update the flag value
+                onChanged: (value) {
+                  setState(() {
+                    showFirstView = value;
+                  });
+                },
+              ),
+            ),
             Expanded(
               flex: 2,
               // color: Color.fromRGBO(100, 220,  45, 1),
@@ -84,13 +113,13 @@ class _LoginPageState extends State<LoginPage> {
                     //make the col only take height of content instead whole height of container so the align at bottom works
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.handshake_outlined, size: 30),
+                      Icon(Icons.handshake_outlined, size: 90, color: ThemeColors.purple,),
                       Text(
                         "Bookly",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
-                          color: ThemeColors.purple
+                          color: ThemeColors.purple,
                         ),
                       ),
                       Text(
@@ -98,9 +127,9 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontStyle: FontStyle.italic,
-                          color: Color.fromRGBO(52, 19, 51, 0.8)
+                          color: Color.fromRGBO(52, 19, 51, 0.8),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -113,61 +142,20 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //email input
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .85,
-                      child: TextField (
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          hintText: "Your Email",
-                          prefixIcon: Icon(Icons.email),
-                          //make background of input white
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: ThemeColors.purple,
-                            )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: ThemeColors.teal,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      )
+                    UserInput(
+                      controller: emailController,
+                      placeholder: "Your Email",
+                      focusNode: emailFocusNode,
+                      icon: Icons.email,
                     ),
                     //empty gap between inputs
-                    SizedBox(
-                      height: 16,
-                    ),
+                    SizedBox(height: 16),
                     //password input
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .85,
-                      child: TextField (
-                        controller: passController,
-                        decoration: InputDecoration(
-                          hintText: "Your Email",
-                          prefixIcon: Icon(Icons.password),
-                          //make background of input white
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: ThemeColors.purple,
-                            )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: ThemeColors.teal,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      )
+                    UserInput(
+                      controller: passController,
+                      focusNode: passFocusNode,
+                      placeholder: 'Your Password',
+                      icon: CupertinoIcons.lock,
                     ),
                     //spacer sized box
                     SizedBox(height: 16),
@@ -177,20 +165,20 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ThemeColors.teal,
-                          foregroundColor: Colors.white
+                          foregroundColor: Colors.white,
                         ),
                         child: Text("Login"),
                         onPressed: () async {
                           await login();
-                        }
-                      )
+                        },
+                      ),
                     ),
                     //spacer sized box
                     SizedBox(height: 12),
-                    Text(loginMessage)
+                    Text(loginMessage),
                   ],
-                )
-              )
+                ),
+              ),
             ),
             Expanded(
               flex: 2,
@@ -198,30 +186,22 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text("Don't have an account?"),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ThemeColors.purple
-                    ),
+                  CupertinoButton(
+                    color: ThemeColors.purple,
                     child: Text(
                       "Create Account",
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
                       Navigator.pushReplacementNamed(context, '/createAcct');
                     },
-                  )
+                  ),
                 ],
-              )
-            )
+              ),
+            ),
           ],
-        )
+        ),
       ),
-        );
-      }
+    );
+  }
 }
-
-
-
-

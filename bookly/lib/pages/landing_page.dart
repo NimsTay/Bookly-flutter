@@ -15,19 +15,24 @@ class _LandingPageState extends State<LandingPage> {
 	@override
 	void initState() {
 		super.initState();
+    //wait for first frame to be rendered before navigating
 		WidgetsBinding.instance.addPostFrameCallback((_) {
-	    checkAuth();
+      checkAuth();
   	});
 	}
 
 	Future<void> checkAuth() async {
 		final mobileStorage = FlutterSecureStorage();
 		final token = await mobileStorage.read(key: 'accessToken');
-
-		if (token == null || JwtDecoder.isExpired(token)) {
-			await mobileStorage.delete(key: 'accessToken');
+    print('token' + token.toString());
+		if (token == null) {
 			Navigator.pushReplacementNamed(context, '/login');
-		} else {
+    }
+    else if (JwtDecoder.isExpired(token)) {
+      await mobileStorage.delete(key: 'accessToken');
+			Navigator.pushReplacementNamed(context, '/login');
+    }
+    else {
 			Navigator.pushReplacementNamed(context, '/home');
 		}
 	}
