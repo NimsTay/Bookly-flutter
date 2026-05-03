@@ -25,16 +25,20 @@ class _LandingPageState extends State<LandingPage> {
 		final mobileStorage = FlutterSecureStorage();
 		final token = await mobileStorage.read(key: 'accessToken');
     print('token' + token.toString());
-		if (token == null) {
-			Navigator.pushReplacementNamed(context, '/login');
-    }
-    else if (JwtDecoder.isExpired(token)) {
-      await mobileStorage.delete(key: 'accessToken');
-			Navigator.pushReplacementNamed(context, '/login');
-    }
-    else {
-			Navigator.pushReplacementNamed(context, '/home');
-		}
+
+    //TODO: remove this condition and just use the bottom sections
+    Navigator.pushReplacementNamed(context, '/home');
+
+		// if (token == null) {
+		// 	Navigator.pushReplacementNamed(context, '/login');
+    // }
+    // else if (JwtDecoder.isExpired(token)) {
+    //   await mobileStorage.delete(key: 'accessToken');
+		// 	Navigator.pushReplacementNamed(context, '/login');
+    // }
+    // else {
+		// 	Navigator.pushReplacementNamed(context, '/home');
+		// }
 	}
 
 	@override

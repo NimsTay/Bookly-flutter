@@ -1,52 +1,67 @@
+import 'package:bookly/controllers/address_controller.dart';
+import 'package:bookly/controllers/top_nav_controller.dart';
 import 'package:bookly/pages/categories_page.dart';
 import 'package:bookly/pages/homepage.dart';
 import 'package:bookly/pages/profile_page.dart';
 import 'package:bookly/pages/search_page.dart';
 import 'package:bookly/theme/theme_colors.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-class BottomNav extends StatelessWidget {
+class BottomNav extends StatefulWidget {
+
   const BottomNav({super.key});
+  @override
+  State<BottomNav> createState() => _BottomNavState();
+}
 
-  String getTitle(int index) {
-    switch(index) {
-      case 0: 
-        return "Bookly";
-      case 1: 
-        return "Search";
-      case 2: 
-        return "Profile";
-      case 3: 
-        return "";
-    }
-    return "";
-  }
 
+class _BottomNavState extends State<BottomNav> {
+  int activeTabIndex = 0;
+  //controller to control shared state of hamburger menu
+  final menuController = TopNavController(); 
+  final addrController = AddressController();
 
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         height: 64,
-        activeColor: ThemeColors.magenta,
-        
+        activeColor: ThemeColors.coral,
+        //set the currentIndex based on the class field
+        currentIndex: activeTabIndex,
+        onTap: (index) {
+          setState(() {
+            activeTabIndex = index;
+          });
+        },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
+            icon: Icon(
+              CupertinoIcons.home,
+              color: activeTabIndex == 0 ? ThemeColors.coral : ThemeColors.magenta,
+            ),
             label: 'Home'
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
+            icon: Icon(
+              CupertinoIcons.search,
+              color: activeTabIndex == 1 ? ThemeColors.coral : ThemeColors.magenta,
+            ),
             label: 'Search'
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.profile_circled),
-            label: 'Profile'
+            icon: Icon(
+              CupertinoIcons.option,
+              color: activeTabIndex == 2 ? ThemeColors.coral : ThemeColors.magenta,
+            ),
+            label: 'Categories'
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.option),
-            label: 'Categories'
+            icon: Icon(
+              CupertinoIcons.profile_circled,
+              color: activeTabIndex == 3 ? ThemeColors.coral : ThemeColors.magenta,
+            ),
+            label: 'Profile'
           ),
         ]
       ),
@@ -55,7 +70,7 @@ class BottomNav extends StatelessWidget {
         switch(tabIndex) {
           case 0:
             return CupertinoTabView(
-              builder: (context) => Homepage()
+              builder: (context) => Homepage(topNavController: menuController, addrController: addrController)
             );
           case 1:
             return CupertinoTabView(
@@ -63,14 +78,14 @@ class BottomNav extends StatelessWidget {
             );
           case 2:
             return CupertinoTabView(
-              builder: (context) => ProfilePage()
+              builder: (context) => CategoriesPage()
             );
           case 3:
             return CupertinoTabView(
-              builder: (context) => CategoriesPage()
+              builder: (context) => ProfilePage()
             );
           default:
-            return Container();
+             return Container();
         }
       },
     );
