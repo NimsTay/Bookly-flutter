@@ -19,6 +19,40 @@ class LeftHamburgerMenu extends StatefulWidget {
 
 class _LeftHamburgerMenuState extends State<LeftHamburgerMenu> {
 
+  List<CupertinoActionSheetAction> createAddressPickerChoices() {
+    
+    List<CupertinoActionSheetAction> addressButtons = [];
+    for (var address in widget.addressController.savedAddresses) {
+      addressButtons.add(CupertinoActionSheetAction(
+        child: Text(
+          address,
+          style: TextStyle(color: ThemeColors.purple),
+        ),
+        onPressed: () {
+          widget.addressController.setCurrentAddress(address);
+          //pop the top most route or the most recent change so this will close the modal
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        )
+      );
+    }
+
+    if(widget.addressController.savedAddresses.length < 3) {
+      addressButtons.add(CupertinoActionSheetAction(
+        child: Text(
+          "Add New Address",
+          style: TextStyle(color: ThemeColors.magenta, fontStyle: FontStyle.italic),
+        ),
+        onPressed: () {
+          print("new address menu pushed");
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        )
+      );
+    }
+    return addressButtons;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -81,7 +115,27 @@ class _LeftHamburgerMenuState extends State<LeftHamburgerMenu> {
                             Icon(CupertinoIcons.chevron_down, color: ThemeColors.purple)
                           ]
                         ),
-                        onPressed: () {print('lasnd');},
+                        onPressed: () {
+                          //show a pop up that slides up from bottom of screen
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoActionSheet(
+                                title: Text("Select Address"),
+                                //action is to take each address and turn it to a button that sets the current address and then closes pop up
+                                actions: createAddressPickerChoices(),
+                                cancelButton: CupertinoActionSheetAction(
+                                  onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                  isDefaultAction: true,
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(color: ThemeColors.coral),
+                                  )
+                                ),
+                              );
+                            }
+                          );
+                        },
                       ) 
                     ) 
                   ) 

@@ -1,4 +1,5 @@
 import 'package:bookly/controllers/address_controller.dart';
+import 'package:bookly/controllers/category_controller.dart';
 import 'package:bookly/controllers/top_nav_controller.dart';
 import 'package:bookly/pages/categories_page.dart';
 import 'package:bookly/pages/homepage.dart';
@@ -20,6 +21,7 @@ class _BottomNavState extends State<BottomNav> {
   //controller to control shared state of hamburger menu
   final menuController = TopNavController(); 
   final addrController = AddressController();
+  final catController = CategoryController();
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,7 @@ class _BottomNavState extends State<BottomNav> {
             );
           case 2:
             return CupertinoTabView(
-              builder: (context) => CategoriesPage()
+              builder: (context) => CategoriesPage(topNavController: menuController, addrController: addrController, categoryController: catController)
             );
           case 3:
             return CupertinoTabView(

@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 
 class AddressController extends ChangeNotifier {
+  String _currentFullAddress = "123 Avenue Mufreesboro TN 37130";
+  String _currentAddressShort = "123 Avenue, 37130";
+  final List<String> _savedAddresses = ["123 Avenue, 37130", "123 Court, 37130"];
 
-  String _currentAddress = "123 Avenue, 37130";
-  final List<String> _savedAddresses = [];
-
-  String get currentAddress => _currentAddress;
+  String get currentAddress => _currentFullAddress;
+  String get currentShortAddress => _currentAddressShort;
+  List<String> get savedAddresses => _savedAddresses;
 
   void setCurrentAddress(String addr) {
-    _currentAddress = addr;
+    //TODO: make a func that truncates the addr to set the shortened currentAddr field
+    _currentFullAddress = addr;
     notifyListeners();
   }
 

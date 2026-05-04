@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => BottomNav(),
         '/search': (context) => SearchPage(),
         '/profile': (context) => ProfilePage(),
-        '/categories': (context) => CategoriesPage()
+        // '/categories': (context) => CategoriesPage()
       },
     );
   }
