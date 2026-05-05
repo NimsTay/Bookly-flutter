@@ -1,5 +1,6 @@
 import 'package:bookly/controllers/address_controller.dart';
 import 'package:bookly/controllers/category_controller.dart';
+import 'package:bookly/controllers/listing_controller.dart';
 import 'package:bookly/controllers/top_nav_controller.dart';
 import 'package:bookly/pages/categories_page.dart';
 import 'package:bookly/pages/homepage.dart';
@@ -10,7 +11,19 @@ import 'package:flutter/cupertino.dart';
 
 class BottomNav extends StatefulWidget {
 
-  const BottomNav({super.key});
+  final TopNavController menuController;
+  final AddressController addrController;
+  final CategoryController catController;
+  final ListingController listingController;
+
+  const BottomNav({
+    super.key,
+    required this.menuController,
+    required this.addrController,
+    required this.catController,
+    required this.listingController,
+  });
+
   @override
   State<BottomNav> createState() => _BottomNavState();
 }
@@ -18,10 +31,7 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int activeTabIndex = 0;
-  //controller to control shared state of hamburger menu
-  final menuController = TopNavController(); 
-  final addrController = AddressController();
-  final catController = CategoryController();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +82,7 @@ class _BottomNavState extends State<BottomNav> {
         switch(tabIndex) {
           case 0:
             return CupertinoTabView(
-              builder: (context) => Homepage(topNavController: menuController, addrController: addrController)
+              builder: (context) => Homepage(topNavController: widget.menuController, addrController: widget.addrController)
             );
           case 1:
             return CupertinoTabView(
@@ -80,7 +90,7 @@ class _BottomNavState extends State<BottomNav> {
             );
           case 2:
             return CupertinoTabView(
-              builder: (context) => CategoriesPage(topNavController: menuController, addrController: addrController, categoryController: catController)
+              builder: (context) => CategoriesPage(topNavController: widget.menuController, addrController: widget.addrController, categoryController: widget.catController)
             );
           case 3:
             return CupertinoTabView(

@@ -45,4 +45,6 @@ class CategoryController extends ChangeNotifier {
     notifyListeners();
   }
 
+  //getListingsInCategory()
+
 }

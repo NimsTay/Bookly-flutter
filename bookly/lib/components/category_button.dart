@@ -31,7 +31,10 @@ class _CategoryButtonComponentState extends State<CategoryButtonComponent> {
           ]
         )
       ),
-      onPressed: () {print("cat pressed");},
+      onPressed: () {
+        widget.categoryController.setActiveCategory(widget.buttonLabel);
+        Navigator.of(context, rootNavigator: true).pushReplacementNamed('/selected-category-page');
+      },
     );
   }
 }
